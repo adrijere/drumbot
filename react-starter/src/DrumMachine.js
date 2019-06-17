@@ -94,7 +94,10 @@ export default class DrumMachine extends React.Component {
   };
 
   increaseSpeed = () => {
-    this.audioEngine.startClock(this.state.pattern.beatsPerMinute / 2);
+    const tempo = this.state.pattern.beatsPerMinute * 1.25;
+    
+    this.audioEngine.startClock(tempo);
+    this.setState(prevState => ({ pattern: {...prevState.pattern, beatsPerMinute: tempo }}));
   };
 
   render() {
@@ -155,14 +158,12 @@ export default class DrumMachine extends React.Component {
                 >
                   Stop
                 </button>
-              </div>
-              <div className="DrumMachine__Transport">
                 <button
                   disabled={!this.state.playing}
                   className="DrumMachine__StartStopButton"
                   onClick={this.increaseSpeed}
                 >
-                  {tracks[0].steps.length}
+                  x2
                 </button>
               </div>
             </>
