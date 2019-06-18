@@ -9,6 +9,7 @@ export default class DrumMachine extends React.Component {
   state = {
     poweredOn: false,
     loading: true,
+    tempo: 0,
     playing: false,
     startTime: 0,
     position: {},
@@ -54,8 +55,15 @@ export default class DrumMachine extends React.Component {
     );
   };
 
+  startPlaying = () => {
+    this.startClock();
+
+    this.setState({ tempo: this.state.pattern.beatsPerMinute });
+  }
+
   startClock = () => {
     this.audioEngine.startClock(this.state.pattern.beatsPerMinute);
+
 
     this.setState({ playing: true });
   };
@@ -98,6 +106,13 @@ export default class DrumMachine extends React.Component {
     
     this.audioEngine.startClock(tempo);
     this.setState(prevState => ({ pattern: {...prevState.pattern, beatsPerMinute: tempo }}));
+  };
+
+  resetSpeed = () => {
+    const tempo = this.state.tempo;
+    
+    this.setState(prevState => ({ pattern: {...prevState.pattern, beatsPerMinute: tempo }}));
+    this.audioEngine.startClock(tempo);
   };
 
   render() {
@@ -147,7 +162,7 @@ export default class DrumMachine extends React.Component {
                 <button
                   disabled={this.state.playing}
                   className="DrumMachine__StartStopButton"
-                  onClick={this.startClock}
+                  onClick={this.startPlaying}
                 >
                   Start
                 </button>
@@ -164,6 +179,13 @@ export default class DrumMachine extends React.Component {
                   onClick={this.increaseSpeed}
                 >
                   x2
+                </button>
+                <button
+                  disabled={!this.state.playing}
+                  className="DrumMachine__StartStopButton"
+                  onClick={this.resetSpeed}
+                >
+                  Reset
                 </button>
               </div>
             </>
